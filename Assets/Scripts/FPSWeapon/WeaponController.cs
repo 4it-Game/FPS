@@ -20,4 +20,28 @@ public class WeaponController : MonoBehaviour {
 		equippedWeapon = Instantiate (gunToEquip, weaponHold.position, weaponHold.rotation) as Weapon;
 		equippedWeapon.transform.parent = weaponHold;
 	}
+
+	public void OnTriggerHold(){
+		if (equippedWeapon != null) {
+			equippedWeapon.OnTriggerHold ();		
+		}
+	}
+
+	public void OnTriggerRelease(){
+		if (equippedWeapon != null) {
+			equippedWeapon.OnTriggerRelease ();		
+		}
+	}
+
+	public void Aim(Vector3 aimPoint){
+		if (equippedWeapon != null) {
+			equippedWeapon.Aim (aimPoint);	
+		}
+	}
+
+	public void OnWalking(){
+		if (equippedWeapon != null) {
+			equippedWeapon.OnWalking ();		
+		}
+	}
 }
