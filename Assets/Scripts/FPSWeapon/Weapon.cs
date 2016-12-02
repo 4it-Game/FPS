@@ -18,6 +18,8 @@ public class Weapon : MonoBehaviour {
 	public float recoilMoveSettleTime = .1f;
 	public float recoilRotationSetTime = .1f;
 
+	Vector3 aimGunMove;
+
 	[Header("Efects")]
 	public Transform shell;
 	public Transform shellEjection;
@@ -34,13 +36,14 @@ public class Weapon : MonoBehaviour {
 	void Start(){
 		muzzleFlash = GetComponent<Muzzleflash> ();
 		shotsreamingInBurst = burstCount;
+		aimGunMove = Vector3.zero;
 	}
 
 	void Update(){
 		//animate the recoil
-		transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref recoilSmoothVelocity, recoilMoveSettleTime);
-		recoilAngle = Mathf.SmoothDamp (recoilAngle, 0, ref recoilRotationSmoothDumpVelocity, recoilRotationSetTime);
-		transform.localEulerAngles = transform.localEulerAngles + Vector3.left * recoilAngle;
+		transform.localPosition = Vector3.SmoothDamp(transform.localPosition, aimGunMove, ref recoilSmoothVelocity, recoilMoveSettleTime);
+//		recoilAngle = Mathf.SmoothDamp (recoilAngle, 0, ref recoilRotationSmoothDumpVelocity, recoilRotationSetTime);
+//		transform.localEulerAngles = transform.localEulerAngles + Vector3.left * recoilAngle;
 	}
 
 	public void Shoot(){
@@ -71,13 +74,22 @@ public class Weapon : MonoBehaviour {
 
 			//recoil the gun
 			transform.localPosition -= Vector3.forward * Random.Range(kickMinMax.x, kickMinMax.y);
-			recoilAngle += Random.Range(recoilAngleMinMax.x, recoilAngleMinMax.y);
-			recoilAngle = Mathf.Clamp (recoilAngle, 0, 30);
+//			recoilAngle += Random.Range(recoilAngleMinMax.x, recoilAngleMinMax.y);
+//			recoilAngle = Mathf.Clamp (recoilAngle, 0, 30);
 		}
 	}
 
-	public void Aim(Vector3 aimPoint){
+	public void Aim(bool isAim){
+		if(isAim){
+			aimGunMove = Vector3.zero;
+		}else{
+			aimGunMove = new Vector3 (0.2f,0,0);
+		}
+	}
+
+	public void LookAt(Vector3 aimPoint){
 		transform.LookAt (aimPoint);
+
 	}
 
 	public void OnTriggerHold(){

@@ -21,6 +21,12 @@ public class WeaponController : MonoBehaviour {
 		equippedWeapon.transform.parent = weaponHold;
 	}
 
+	public void Aim(bool isAim){
+		if (equippedWeapon != null) {
+			equippedWeapon.Aim (isAim);		
+		}
+	}
+
 	public void OnTriggerHold(){
 		if (equippedWeapon != null) {
 			equippedWeapon.OnTriggerHold ();		
@@ -33,9 +39,9 @@ public class WeaponController : MonoBehaviour {
 		}
 	}
 
-	public void Aim(Vector3 aimPoint){
+	public void LookAt(Vector3 aimPoint){
 		if (equippedWeapon != null) {
-			equippedWeapon.Aim (aimPoint);	
+			equippedWeapon.LookAt (aimPoint);	
 		}
 	}
 

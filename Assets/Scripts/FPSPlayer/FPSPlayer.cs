@@ -31,25 +31,28 @@ public class FPSPlayer : LivingEntity {
 		//Apply movement
 		motor.Move(_velocity);
 
-		//Aim input
+		//gun point lookAt
 		Ray ray = viewCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
 		Debug.DrawRay (ray.origin, ray.direction * 200, Color.green);
 
 		RaycastHit hit;
-		if (Physics.Raycast (ray, out hit))
-			if (Input.GetMouseButton (0)) {
-			Debug.Log (hit.point);
-				gunController.Aim (hit.point);
-				gunController.OnTriggerHold ();
-			}
-
-		//weapon input
-//		if (Input.GetMouseButton(0)){
-//			gunController.OnTriggerHold ();
-//		}
+		if (Physics.Raycast (ray, out hit)) {
+			gunController.LookAt (hit.point);		
+		}
+	
+		if (Input.GetMouseButton (0)) {
+			gunController.OnTriggerHold ();
+		}
+		//weapon aim input
+		gunController.Aim (Input.GetMouseButton(1));
 
 		if (Input.GetMouseButtonUp(0)){
 			gunController.OnTriggerRelease ();
+		}
+
+		//gun waking
+		if(_velocity != Vector3.zero){
+			gunController.OnWalking ();
 		}
 	}
 }
