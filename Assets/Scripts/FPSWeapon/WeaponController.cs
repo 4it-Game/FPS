@@ -23,7 +23,10 @@ public class WeaponController : MonoBehaviour {
 
 	public void Aim(bool isAim){
 		if (equippedWeapon != null) {
-			equippedWeapon.Aim (isAim);		
+			equippedWeapon.Aim (isAim);
+			/*
+				should add mouse sensivity
+			*/
 		}
 	}
 

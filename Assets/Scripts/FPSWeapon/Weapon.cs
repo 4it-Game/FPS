@@ -26,6 +26,10 @@ public class Weapon : MonoBehaviour {
 	Muzzleflash muzzleFlash;
 	float nextShotTime;
 
+	[Header("Aim")]
+	public Vector2 holdPos = new Vector2 (-0.2f, 0.05f);
+	public float weaponPush = 0.2f;
+
 	bool triggerreleasedSinceLasetShot;
 	int shotsreamingInBurst;
 
@@ -81,15 +85,15 @@ public class Weapon : MonoBehaviour {
 
 	public void Aim(bool isAim){
 		if(isAim){
-			aimGunMove = Vector3.zero;
+			aimGunMove = new Vector3 (holdPos.x, holdPos.y, weaponPush);
 		}else{
-			aimGunMove = new Vector3 (0.2f,0,0);
+			aimGunMove = Vector3.zero;
+
 		}
 	}
 
 	public void LookAt(Vector3 aimPoint){
 		transform.LookAt (aimPoint);
-
 	}
 
 	public void OnTriggerHold(){

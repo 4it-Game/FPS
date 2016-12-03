@@ -10,6 +10,10 @@ public class Projectile : MonoBehaviour {
 
 	float lifetime = 3;
 
+	public float maxDist = 1000000;
+	public GameObject decolHitWall;
+	public float floatInFrontOfWall = 0.01f;
+
 	void Start(){
 		Destroy (gameObject, lifetime);
 
@@ -31,6 +35,12 @@ public class Projectile : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide)){
 			OnHitObject (hit);	
+		}
+
+		if(Physics.Raycast(transform.position, transform.forward, out hit, maxDist)){
+			if(decolHitWall && hit.transform.tag == "Wall"){
+				Instantiate (decolHitWall, hit.point + (hit.normal * floatInFrontOfWall), Quaternion.LookRotation(hit.normal));
+			}
 		}
 	}
 
