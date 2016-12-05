@@ -23,6 +23,5 @@ public class FadeOut : MonoBehaviour {
 			mat.color = Color.Lerp (initialColor,Color.clear, precent);
 			yield return null;
 		}
-		Destroy (gameObject);
 	}
 }

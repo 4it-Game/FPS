@@ -6,12 +6,15 @@ public class FPSMotor : MonoBehaviour {
 
 	[SerializeField]
 	private Camera cam;
+	[HideInInspector]
+	public float movementSpeed;
+	float wallkingSpeed;
+	float curSpeed;
 
 	private Vector3 velocity = Vector3.zero;
 	private Vector3 rotation = Vector3.zero;
 	private Vector3 cameraRotation = Vector3.zero;
 	private Rigidbody rb;
-
 
 	void Start (){
 		rb = GetComponent<Rigidbody>();
@@ -19,7 +22,8 @@ public class FPSMotor : MonoBehaviour {
 
 	// Gets a movement vector
 	public void Move (Vector3 _velocity){
-		velocity = _velocity;
+		wallkingSpeed = Mathf.SmoothDamp (wallkingSpeed, movementSpeed,ref curSpeed, 1f);
+		velocity = _velocity * wallkingSpeed;
 	}
 
 	// Gets a Rotation vector
@@ -51,7 +55,7 @@ public class FPSMotor : MonoBehaviour {
 	void PerformRotation(){
 		rb.MoveRotation(rb.rotation * Quaternion.Euler(rotation));
 		if(cam != null){
-			cam.transform.Rotate (cameraRotation);
+			cam.transform.localEulerAngles = cameraRotation;
 		}
 	}
 }
