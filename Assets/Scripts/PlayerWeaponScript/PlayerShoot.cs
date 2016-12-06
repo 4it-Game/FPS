@@ -86,5 +86,13 @@ public class PlayerShoot : MonoBehaviour {
 	void OnHit(Vector3 _pos, Vector3 _normal){
 		GameObject _hitEffect = (GameObject)Instantiate (weaponMannger.GetCurrentGraphics().hitEfectPrefab, _pos, Quaternion.LookRotation(_normal));
 		Destroy (_hitEffect, 2f);
+
+		for(int i = 0; i < weaponMannger.GetCurrentGraphics().projectileSpawn.Length; i ++){
+			weaponMannger.GetCurrentGraphics ().projectileSpawn [i].LookAt (_pos);
+			currentWeapon.nextShotTime = Time.time + weaponMannger.msBetweenShots / 1000;
+			Projectile newProjectile = Instantiate (weaponMannger.GetCurrentGraphics().projectile, weaponMannger.GetCurrentGraphics().projectileSpawn[i].position, weaponMannger.GetCurrentGraphics().projectileSpawn[i].rotation) as Projectile;
+			newProjectile.SetSpeed (weaponMannger.muzzleVelocity);
+
+		}
 	}
 }

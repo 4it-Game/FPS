@@ -7,4 +7,7 @@ public class WeaponGraphics : MonoBehaviour {
 	[Header("Weapon Efects")]
 	public Transform shell;
 	public Transform shellEjection;
+	[Header("Weapon Bullet Efects")]
+	public Transform[] projectileSpawn;
+	public Projectile projectile;
 }

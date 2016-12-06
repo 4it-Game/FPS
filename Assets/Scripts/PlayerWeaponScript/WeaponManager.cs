@@ -19,9 +19,11 @@ public class WeaponManager : MonoBehaviour {
 	Vector3 aimGunMove;
 	[HideInInspector]
 	Vector3 recoilSmoothVelocity;
-	[Header("Aim")]
+	[Header("Aim and Bullet")]
 	public Vector2 holdPos = new Vector2 (-0.2f, 0.05f);
 	public float weaponPush = 0.2f;
+	public float msBetweenShots = 100;
+	public float muzzleVelocity = 35;
 
 	void Awake () {
 		EquipWeapon (primaryWeapon);
