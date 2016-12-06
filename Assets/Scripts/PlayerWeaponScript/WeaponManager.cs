@@ -10,9 +10,26 @@ public class WeaponManager : MonoBehaviour {
 	private WeaponGraphics currentGraphics;
 	[SerializeField]
 	private Transform weaponHolder;
+	[Header("Recoil")]
+	public Vector2 kickMinMax = new Vector2(.05f, .02f);
+	public Vector2 recoilAngleMinMax = new Vector2(3,5);
+	public float recoilMoveSettleTime = .1f;
+	public float recoilRotationSetTime = .1f;
+	[HideInInspector]
+	Vector3 aimGunMove;
+	[HideInInspector]
+	Vector3 recoilSmoothVelocity;
+	[Header("Aim")]
+	public Vector2 holdPos = new Vector2 (-0.2f, 0.05f);
+	public float weaponPush = 0.2f;
 
 	void Awake () {
 		EquipWeapon (primaryWeapon);
+	}
+
+	void Update(){
+		//animate the recoil
+		weaponHolder.GetChild(0).transform.localPosition = Vector3.SmoothDamp(weaponHolder.GetChild(0).transform.localPosition, aimGunMove, ref recoilSmoothVelocity, recoilMoveSettleTime);
 	}
 	
 	void EquipWeapon(PlayerWeapon _weapon){
@@ -33,5 +50,29 @@ public class WeaponManager : MonoBehaviour {
 
 	public WeaponGraphics GetCurrentGraphics(){
 		return currentGraphics;
+	}
+
+	public Transform Shell
+	{
+		get { return currentGraphics.shell; }
+	}
+
+	public Transform ShellEjection
+	{
+		get { return currentGraphics.shellEjection; }
+	}
+
+	public void Recoil(){
+		//recoil the gun
+		weaponHolder.GetChild(0).transform.localPosition -= Vector3.forward * Random.Range(kickMinMax.x, kickMinMax.y);
+	}
+
+	public void Aim(bool isAim){
+		if(isAim){
+			aimGunMove = new Vector3 (holdPos.x, holdPos.y, weaponPush);
+		}else{
+			aimGunMove = Vector3.zero;
+
+		}
 	}
 }

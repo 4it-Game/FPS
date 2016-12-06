@@ -15,6 +15,7 @@ public class PlayerShoot : MonoBehaviour {
 	bool triggerreleasedSinceLasetShot;
 	int shotsreamingInBurst;
 
+
 	void Start () {
 		
 		weaponMannger = GetComponent<WeaponManager> ();
@@ -34,11 +35,16 @@ public class PlayerShoot : MonoBehaviour {
 		} else {
 			OnTriggerRelease ();
 		}
+
+		if (Input.GetMouseButton (1)) {
+			weaponMannger.Aim (true);
+		} else {
+			weaponMannger.Aim (false);
+		}
 	}
 
 	public void Shoot(){
-
-		if (Time.time > currentWeapon.nextShotTime) {
+	if (Time.time > currentWeapon.nextShotTime) {
 			if(fireMode == PlayerWeapon.FireMode.Burst){
 				if(shotsreamingInBurst == 0){
 					return;
@@ -52,6 +58,8 @@ public class PlayerShoot : MonoBehaviour {
 			}
 
 			ShootEffect ();
+
+			weaponMannger.Recoil ();
 
 			RaycastHit hit;
 			if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.range, mask)) {
@@ -72,6 +80,7 @@ public class PlayerShoot : MonoBehaviour {
 
 	void ShootEffect(){
 		weaponMannger.GetCurrentGraphics ().muzzleFlash.Play ();
+		Instantiate (weaponMannger.Shell, weaponMannger.ShellEjection.position, weaponMannger.ShellEjection.rotation);
 	}
 
 	void OnHit(Vector3 _pos, Vector3 _normal){

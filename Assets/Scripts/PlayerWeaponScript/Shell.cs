@@ -11,5 +11,6 @@ public class Shell : MonoBehaviour {
 		float force = Random.Range (forceMin, forceMax);
 		rb.AddForce (transform.right * force);
 		rb.AddTorque (Random.insideUnitSphere * force);
+		Destroy (gameObject, 5f);
 	}
 }

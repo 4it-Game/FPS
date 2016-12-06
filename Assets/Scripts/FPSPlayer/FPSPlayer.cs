@@ -99,38 +99,6 @@ public class FPSPlayer : LivingEntity {
 		}
 	}
 
-//	void Shoot(){
-//		gun point lookAt
-//		Ray ray = viewCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-//		Debug.DrawRay (ray.origin, ray.direction * 1000, Color.green);
-//
-//		RaycastHit hit;
-//		if (Physics.Raycast (ray, out hit)) {
-//			gunController.LookAt (hit.point);		
-//		}
-//
-//		if (Input.GetMouseButton (0)) {
-//			gunController.OnTriggerHold ();
-//		}
-//		//weapon aim input
-//		gunController.Aim (Input.GetMouseButton(1));
-//		if (Input.GetMouseButton (1)) {
-//			lookSensitivity = aimSensitivity;
-//		} else {
-//			lookSensitivity = 5;
-//		}
-//
-//
-//		if (Input.GetMouseButtonUp(0)){
-//			gunController.OnTriggerRelease ();
-//		}
-//
-//		//gun waking
-//		if(_velocity != Vector3.zero){
-//			gunController.OnWalking ();
-//		}
-//	}
-
 	void OnCollisionExit(){
 		isGrounded = false;
 	}
