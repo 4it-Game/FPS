@@ -5,7 +5,7 @@ using System.Collections;
 public class FPSMotor : MonoBehaviour {
 
 	[SerializeField]
-	private Camera cam;
+	public Camera cam;
 	[HideInInspector]
 	public float movementSpeed;
 	float wallkingSpeed;
@@ -18,6 +18,7 @@ public class FPSMotor : MonoBehaviour {
 
 	void Start (){
 		rb = GetComponent<Rigidbody>();
+		rb.useGravity = true;
 	}
 
 	// Gets a movement vector

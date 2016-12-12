@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
 
 [RequireComponent (typeof(WeaponManager))]
-public class PlayerShoot : MonoBehaviour {
+public class PlayerShoot : NetworkBehaviour {
+
+	private const string PLAYE_TAG = "Player";
 
 	[SerializeField]
 	private Camera cam;
 	[SerializeField]
-	private LayerMask mask;
-
+	private LayerMask shootMask;
 	private PlayerWeapon currentWeapon;
 	private WeaponManager weaponMannger; 
 	PlayerWeapon.FireMode fireMode;
@@ -43,8 +44,26 @@ public class PlayerShoot : MonoBehaviour {
 		}
 	}
 
-	public void Shoot(){
-	if (Time.time > currentWeapon.nextShotTime) {
+	//call on the server when the player shoot
+	[Command]
+	void CmdOnShoot(){
+		RpcShootEffects ();
+	}
+
+	//call on every effectable client
+	[ClientRpc]
+	void RpcShootEffects(){
+		weaponMannger.GetCurrentGraphics ().muzzleFlash.Play ();
+	}
+
+	[Client]
+	void Shoot(){
+		if (!isLocalPlayer)
+			return;
+		//call the onShoot method on the server
+		CmdOnShoot ();
+
+		if (Time.time > currentWeapon.nextShotTime) {
 			if(fireMode == PlayerWeapon.FireMode.Burst){
 				if(shotsreamingInBurst == 0){
 					return;
@@ -57,15 +76,24 @@ public class PlayerShoot : MonoBehaviour {
 				}
 			}
 
-			ShootEffect ();
-
 			weaponMannger.Recoil ();
 
 			RaycastHit hit;
-			if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.range, mask)) {
-				OnHit (hit.point, hit.normal);
+			if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.range, shootMask)) {
+				//call hit method on server
+				CmdOnHit (hit.point, hit.normal);
+				if(hit.collider.tag == PLAYE_TAG){
+					CmdPlayerShot (hit.collider.name, currentWeapon.damage);
+				}
 			}
 		}
+	}
+
+	[Command]
+	void CmdPlayerShot(string _playerId, int _damage){
+		Debug.Log ("Player shot " + _playerId);
+		PlayerManager _player = GameManager.GetPlayer (_playerId);
+		_player.RpcTakeDamage (_damage);
 	}
 
 	public void OnTriggerHold(){
@@ -78,21 +106,16 @@ public class PlayerShoot : MonoBehaviour {
 		shotsreamingInBurst = currentWeapon.burstCount;
 	}
 
-	void ShootEffect(){
-		weaponMannger.GetCurrentGraphics ().muzzleFlash.Play ();
-		Instantiate (weaponMannger.Shell, weaponMannger.ShellEjection.position, weaponMannger.ShellEjection.rotation);
+	//when hit something when call on server it takes hitpoint and normal of surface
+	[Command]
+	void CmdOnHit(Vector3 _pos, Vector3 _normal){
+		RpcDoHitEffect (_pos, _normal);
 	}
 
-	void OnHit(Vector3 _pos, Vector3 _normal){
+	//call on every effected client
+	[ClientRpc]
+	void RpcDoHitEffect(Vector3 _pos, Vector3 _normal){
 		GameObject _hitEffect = (GameObject)Instantiate (weaponMannger.GetCurrentGraphics().hitEfectPrefab, _pos, Quaternion.LookRotation(_normal));
 		Destroy (_hitEffect, 2f);
-
-		for(int i = 0; i < weaponMannger.GetCurrentGraphics().projectileSpawn.Length; i ++){
-			weaponMannger.GetCurrentGraphics ().projectileSpawn [i].LookAt (_pos);
-			currentWeapon.nextShotTime = Time.time + weaponMannger.msBetweenShots / 1000;
-			Projectile newProjectile = Instantiate (weaponMannger.GetCurrentGraphics().projectile, weaponMannger.GetCurrentGraphics().projectileSpawn[i].position, weaponMannger.GetCurrentGraphics().projectileSpawn[i].rotation) as Projectile;
-			newProjectile.SetSpeed (weaponMannger.muzzleVelocity);
-
-		}
 	}
 }

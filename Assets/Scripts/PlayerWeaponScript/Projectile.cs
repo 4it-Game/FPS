@@ -6,7 +6,6 @@ public class Projectile : MonoBehaviour {
 	public LayerMask collisionMask;
 	public Color trailColor;
 	float speed = 10;
-	float damage = 1;
 
 	float lifetime = 3;
 
@@ -46,10 +45,7 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnHitObject(RaycastHit hit){
-		IDamageable damagebaleObject = hit.collider.GetComponent<IDamageable> ();
-		if(damagebaleObject != null){
-			damagebaleObject.TakeHit (damage, hit);
-		}
+		//damge
 
 		GameObject.Destroy (gameObject);
 	}

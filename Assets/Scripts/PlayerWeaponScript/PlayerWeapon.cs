@@ -4,7 +4,7 @@
 public class PlayerWeapon {
 
 	public string name = "AK83";
-	public float damage = 10f;
+	public int damage = 1;
 	public float range = 200f;
 	public enum FireMode{ Auto, Burst, Single};
 	public FireMode fireMode;

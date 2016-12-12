@@ -2,8 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(FPSMotor))]
-//[RequireComponent(typeof(WeaponController))]
-public class FPSPlayer : LivingEntity {
+public class FPSPlayer : MonoBehaviour {
 
 	[Header("Player Behavior")]
 	[SerializeField]
@@ -20,22 +19,15 @@ public class FPSPlayer : LivingEntity {
 	[Header("Look Behavior")]
 	[SerializeField]
 	private float lookSensitivity = 5f;
-	[SerializeField]
-	private float aimSensitivity = 1f;
-	public float minimumY = -60F;
-	public float maximumY = 60F;
+	public float camYRotationLimit = 60f;
 	float rotationY = 0;
 	// Component caching
 
 	private FPSMotor motor;
-//	WeaponController gunController;
-	public Camera viewCamera;
 
-	protected override void Start (){
-		base.Start ();
+	void Start (){
 		Cursor.lockState = CursorLockMode.Locked;
 		motor = GetComponent<FPSMotor>();
-//		gunController = GetComponent<WeaponController> ();
 	}
 
 	void Update ()
@@ -73,9 +65,9 @@ public class FPSPlayer : LivingEntity {
 
 		//calculate rotation for camera turning
 		rotationY += Input.GetAxis("Mouse Y") * lookSensitivity;
-		rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+		rotationY = Mathf.Clamp (rotationY, -camYRotationLimit, camYRotationLimit);
 		// Final rotate vector
-		Vector3 _cameraRotation = new Vector3(-rotationY, viewCamera.transform.localEulerAngles.y, 0);
+		Vector3 _cameraRotation = new Vector3(-rotationY, motor.cam.transform.localEulerAngles.y, 0);
 
 		//Apply Camera Rotation
 		motor.RotateCamera(_cameraRotation);

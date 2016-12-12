@@ -54,16 +54,6 @@ public class WeaponManager : MonoBehaviour {
 		return currentGraphics;
 	}
 
-	public Transform Shell
-	{
-		get { return currentGraphics.shell; }
-	}
-
-	public Transform ShellEjection
-	{
-		get { return currentGraphics.shellEjection; }
-	}
-
 	public void Recoil(){
 		//recoil the gun
 		weaponHolder.GetChild(0).transform.localPosition -= Vector3.forward * Random.Range(kickMinMax.x, kickMinMax.y);
