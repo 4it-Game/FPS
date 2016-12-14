@@ -39,6 +39,10 @@ public class FPSMotor : MonoBehaviour {
 
 	// Run every physics iteration
 	void FixedUpdate (){
+		
+		if(PauseMenu.IsOn)
+			return;
+		
 		PerformMovement();
 		PerformRotation ();
 	}

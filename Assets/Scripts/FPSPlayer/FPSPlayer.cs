@@ -73,7 +73,7 @@ public class FPSPlayer : MonoBehaviour {
 		motor.RotateCamera(_cameraRotation);
 
 		//jump
-		if(Input.GetButton("Jump") && isGrounded){
+		if(Input.GetButton("Jump") && isGrounded && !PauseMenu.IsOn){
 			GetComponent<Rigidbody> ().AddForce (0, jumpVelocity, 0);
 		}
 

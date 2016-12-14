@@ -31,6 +31,10 @@ public class PlayerShoot : NetworkBehaviour {
 	}
 
 	void Update () {
+
+		if(PauseMenu.IsOn)
+			return;
+
 		if (Input.GetButton ("Fire1")) {
 			OnTriggerHold ();
 		} else {
