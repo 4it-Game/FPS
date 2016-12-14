@@ -18,6 +18,9 @@ public class PlayerManager : NetworkBehaviour {
 	[SyncVar]
 	private int currentHelath;
 
+	public int kills;
+	public int deaths;
+
 	[SerializeField]
 	private Behaviour[] disableWhenDeath;
 	[SerializeField]
@@ -85,7 +88,7 @@ public class PlayerManager : NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	public void RpcTakeDamage(int _amount){
+	public void RpcTakeDamage(int _amount, string _sourcePlayerID){
 
 		if(isDead){
 			return;
@@ -96,12 +99,17 @@ public class PlayerManager : NetworkBehaviour {
 		Debug.Log (transform.name + " now has " + currentHelath + " health");
 
 		if(currentHelath <= 0){
-			Die ();
+			Die (_sourcePlayerID);
 		}
 	}
 
-	private void Die(){
+	private void Die(string _sourceID){
 		isDead = true;
+		PlayerManager _sourcePlayer = GameManager.GetPlayer (_sourceID);
+		if (_sourcePlayer != null) {
+			_sourcePlayer.kills++;
+		}
+		deaths++;
 		//Disable component
 		for(int i = 0; i < disableWhenDeath.Length; i++){
 			disableWhenDeath [i].enabled = false;

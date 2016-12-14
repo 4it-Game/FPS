@@ -85,19 +85,21 @@ public class PlayerShoot : NetworkBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.range, shootMask)) {
 				//call hit method on server
-				CmdOnHit (hit.point, hit.normal);
+
 				if(hit.collider.tag == PLAYE_TAG){
-					CmdPlayerShot (hit.collider.name, currentWeapon.damage);
+					CmdPlayerShot (hit.collider.name, currentWeapon.damage, transform.name);
 				}
+
+				CmdOnHit (hit.point, hit.normal);
 			}
 		}
 	}
 
 	[Command]
-	void CmdPlayerShot(string _playerId, int _damage){
+	void CmdPlayerShot(string _playerId, int _damage, string _sourcePlayerID){
 		Debug.Log ("Player shot " + _playerId);
 		PlayerManager _player = GameManager.GetPlayer (_playerId);
-		_player.RpcTakeDamage (_damage);
+		_player.RpcTakeDamage (_damage, _sourcePlayerID);
 	}
 
 	public void OnTriggerHold(){
