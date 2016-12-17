@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using System.Collections;
 
 public class JoinGame : MonoBehaviour {
 
@@ -29,6 +30,11 @@ public class JoinGame : MonoBehaviour {
 
 	public void RefreshRoomList(){
 		ClearRoomList ();
+
+		if(networkManager.matchMaker == null){
+			networkManager.StartMatchMaker ();
+		}
+
 		networkManager.matchMaker.ListMatches (0, 20, "", true, 0, 0, OnMatchList);
 		status.text = "Loading...";
 	}
@@ -68,7 +74,28 @@ public class JoinGame : MonoBehaviour {
 	public void JoinRoom (MatchInfoSnapshot _match)
 	{
 		networkManager.matchMaker.JoinMatch (_match.networkId, "", "127.0.0.1", "", 0, 1, networkManager.OnMatchJoined);
+		StartCoroutine (WaitForJoin());
+	}
+
+	IEnumerator WaitForJoin(){
 		ClearRoomList ();
-		status.text = "JOINING...";
+
+		int joinCountDown = 10;
+		while(joinCountDown > 0){
+			status.text = "JOINING...(" + joinCountDown + ")";
+			yield return new WaitForSeconds (1);
+			joinCountDown--;
+		}
+
+		status.text = "Faild to Connect";
+		yield return new WaitForSeconds (1);
+
+		MatchInfo matchInfo = networkManager.matchInfo;
+		if(matchInfo != null){
+			networkManager.matchMaker.DropConnection (matchInfo.networkId, matchInfo.nodeId, 0, networkManager.OnDropConnection);
+			networkManager.StopHost ();	
+		}
+
+		RefreshRoomList ();
 	}
 }

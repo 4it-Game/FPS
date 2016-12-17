@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 
-[RequireComponent(typeof(PlayerManager))]
+[RequireComponent(typeof(PlayerSetup))]
 public class PlayerManager : NetworkBehaviour {
 
 	[SyncVar]
@@ -17,6 +17,9 @@ public class PlayerManager : NetworkBehaviour {
 	private int maxHealth = 100;
 	[SyncVar]
 	private int currentHelath;
+
+	[SyncVar]
+	public string username = "Loading...";
 
 	public int kills;
 	public int deaths;
@@ -108,7 +111,9 @@ public class PlayerManager : NetworkBehaviour {
 		PlayerManager _sourcePlayer = GameManager.GetPlayer (_sourceID);
 		if (_sourcePlayer != null) {
 			_sourcePlayer.kills++;
+			GameManager.singelton.onPlayerCallback.Invoke (username, _sourcePlayer.username);
 		}
+
 		deaths++;
 		//Disable component
 		for(int i = 0; i < disableWhenDeath.Length; i++){

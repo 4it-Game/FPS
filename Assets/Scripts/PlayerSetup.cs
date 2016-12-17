@@ -37,6 +37,22 @@ public class PlayerSetup : NetworkBehaviour {
 //				Debug.LogError ("No HUD Found In PlayerUI Prefab");
 //			
 			GetComponent<PlayerManager> ().SetupPlayer();
+			string username = "Loading...";
+			if (UserAccountManager.IsLoggedIn)
+				username = UserAccountManager.loggedIn_Username;
+			else
+				username = transform.name;
+			
+			CmdSetUserName (transform.name, username);
+		}
+	}
+
+	[Command]
+	void CmdSetUserName(string _playerID, string username){
+		PlayerManager player = GameManager.GetPlayer (_playerID);
+		if (player != null) {
+			Debug.Log (username + " has joined.");
+			player.username = username;
 		}
 	}
 

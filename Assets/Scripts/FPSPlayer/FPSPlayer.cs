@@ -26,7 +26,6 @@ public class FPSPlayer : MonoBehaviour {
 	private FPSMotor motor;
 
 	void Start (){
-		Cursor.lockState = CursorLockMode.Locked;
 		motor = GetComponent<FPSMotor>();
 	}
 
@@ -75,11 +74,6 @@ public class FPSPlayer : MonoBehaviour {
 		//jump
 		if(Input.GetButton("Jump") && isGrounded && !PauseMenu.IsOn){
 			GetComponent<Rigidbody> ().AddForce (0, jumpVelocity, 0);
-		}
-
-		//escape cursor
-		if(Input.GetKeyDown("escape")){
-			Cursor.lockState = CursorLockMode.None;
 		}
 	}
 

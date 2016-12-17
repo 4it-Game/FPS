@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
@@ -10,9 +11,13 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject gameCamera;
 
+	public delegate void OnPlayerKilledCallback (string player,string source);
+
+	public  OnPlayerKilledCallback onPlayerCallback;
+
 	void Awake(){
 		if (singelton != null) {
-			Debug.Log ("More than one game mannager in the scene");
+			Debug.LogError ("More than one game mannager in the scene");
 		} else {
 			singelton = this;
 		}
@@ -44,6 +49,10 @@ public class GameManager : MonoBehaviour {
 
 	public static PlayerManager GetPlayer(string _playerId){
 		return players[_playerId];
+	}
+
+	public static PlayerManager[] GetAllPlayers(){
+		return players.Values.ToArray ();
 	}
 
 //	void OnGUI(){

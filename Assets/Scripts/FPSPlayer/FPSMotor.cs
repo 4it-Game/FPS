@@ -40,8 +40,15 @@ public class FPSMotor : MonoBehaviour {
 	// Run every physics iteration
 	void FixedUpdate (){
 		
-		if(PauseMenu.IsOn)
+		if (PauseMenu.IsOn) {
+			if (Cursor.lockState != CursorLockMode.None)
+				Cursor.lockState = CursorLockMode.None;
 			return;
+		}
+			
+		if (Cursor.lockState != CursorLockMode.Locked) {
+			Cursor.lockState = CursorLockMode.Locked;
+		}
 		
 		PerformMovement();
 		PerformRotation ();

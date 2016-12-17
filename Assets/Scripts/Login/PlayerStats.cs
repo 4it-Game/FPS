@@ -12,6 +12,10 @@ public class PlayerStats : MonoBehaviour {
 	}
 
 	void OnReceivedData(string data){
+		if(killCount == null || deathCount == null){
+			return;
+		}
+
 		killCount.text = DataTranslater.DataToKill(data).ToString() + " kills";
 		deathCount.text = DataTranslater.DataToDeaths(data).ToString() + " deaths";
 	}

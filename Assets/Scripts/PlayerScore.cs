@@ -4,6 +4,9 @@ using System.Collections;
 [RequireComponent(typeof(PlayerManager))]
 public class PlayerScore : MonoBehaviour {
 
+	int lastKills = 0;
+	int lastDeaths = 0;
+
 	PlayerManager player;
 
 	void Start () {
@@ -32,22 +35,25 @@ public class PlayerScore : MonoBehaviour {
 	}
 
 	void OnDataRecieved(string data){
-		
-		if (player.kills == 0 && player.deaths == 0)
+
+		if (player.kills <= lastKills && player.deaths <= lastDeaths)
 			return;
+
+		int killsSinceLast = player.kills - lastKills;
+		int deathsSinceLast = player.deaths = lastDeaths;
 		
 		int kills = DataTranslater.DataToKill (data);
 		int deaths = DataTranslater.DataToDeaths (data);
 
-		int newKills = player.kills + kills;
-		int newDeaths = player.deaths + deaths;
+		int newKills = killsSinceLast + kills;
+		int newDeaths = deathsSinceLast + deaths;
 
 		string newData = DataTranslater.VAluesToData (newKills, newDeaths);
 
 		Debug.Log ("Syncing: " + newData);
 
-		player.kills = 0;
-		player.deaths = 0;
+		lastKills = player.kills;
+		lastDeaths = player.deaths;
 
 		UserAccountManager.instance.SendData (newData);
 	}
